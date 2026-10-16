@@ -1,0 +1,89 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+    <p><a href="{% url 'learning_logs:topic' topic.id %}">&larr; {{ topic }}</a></p>
+
+    <h2>{{ topic }} - Board</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h5 class="text-center">To Learn</h5>
+            <div class="column p-2 bg-light rounded" data-status="to_learn" ondragover="allowDrop(event)" ondrop="dropCard(event)">
+                {% for entry in to_learn %}
+                    <div class="card mb-2" draggable="true" ondragstart="dragStart(event)" data-entry-id="{{ entry.id }}">
+                        <div class="card-body p-2">
+                            <p class="card-text small mb-0">{{ entry.text|truncatewords:15 }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h5 class="text-center">Learning</h5>
+            <div class="column p-2 bg-light rounded" data-status="learning" ondragover="allowDrop(event)" ondrop="dropCard(event)">
+                {% for entry in learning %}
+                    <div class="card mb-2" draggable="true" ondragstart="dragStart(event)" data-entry-id="{{ entry.id }}">
+                        <div class="card-body p-2">
+                            <p class="card-text small mb-0">{{ entry.text|truncatewords:15 }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h5 class="text-center">Mastered</h5>
+            <div class="column p-2 bg-light rounded" data-status="mastered" ondragover="allowDrop(event)" ondrop="dropCard(event)">
+                {% for entry in mastered %}
+                    <div class="card mb-2" draggable="true" ondragstart="dragStart(event)" data-entry-id="{{ entry.id }}">
+                        <div class="card-body p-2">
+                            <p class="card-text small mb-0">{{ entry.text|truncatewords:15 }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                }
+            }
+            return cookieValue;
+        }
+
+        function dragStart(event) {
+            event.dataTransfer.setData('entryId', event.target.dataset.entryId);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function dropCard(event) {
+            event.preventDefault();
+            const entryId = event.dataTransfer.getData('entryId');
+            const column = event.currentTarget;
+            const newStatus = column.dataset.status;
+
+            const card = document.querySelector('[data-entry-id="' + entryId + '"]');
+            column.appendChild(card);
+
+            fetch('/entries/' + entryId + '/update_status/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({status: newStatus})
+            });
+        }
+    </script>
+
+{% endblock content %}

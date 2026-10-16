@@ -1,0 +1,25 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+    <h2>Topic: {{ topic }}</h2>
+
+    <p>
+        <a href="{% url 'learning_logs:new_entry' topic.id %}" class="btn btn-primary">Add new entry</a>
+        <a href="{% url 'learning_logs:board' topic.id %}" class="btn btn-success">View as Board</a>
+    </p>
+
+    <h4>Entries:</h4>
+    {% for entry in entries %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted">{{ entry.date_added }} - {{ entry.get_status_display }}</h6>
+                <p class="card-text">{{ entry.text|linebreaks }}</p>
+                <a href="{% url 'learning_logs:edit_entry' entry.id %}" class="btn btn-sm btn-outline-secondary">Edit entry</a>
+            </div>
+        </div>
+    {% empty %}
+        <p>There are no entries for this topic yet.</p>
+    {% endfor %}
+
+{% endblock content %}
