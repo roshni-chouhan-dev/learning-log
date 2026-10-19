@@ -18,3 +18,17 @@ Python, Django, HTML, CSS
 
 ## What I learned
 When I was a child, I used to wonder how websites like this were built. Now I can build one myself. This project taught me how to work with Django and its libraries, and how to use HTML and CSS to build the pages. I got many errors while building this, and fixing them one by one taught me how to read error messages and find the cause.
+
+## Screenshots
+
+### Sign in
+![Sign in](Learning_log_Screenshots/Sign_in.png)
+
+### Home page
+![Home page](Learning_log_Screenshots/Home.png)
+
+### Topics
+![Topics list](Learning_log_Screenshots/Topics.png)
+
+### Entries inside a topic
+![Entries](Learning_log_Screenshots/Entries.png)
